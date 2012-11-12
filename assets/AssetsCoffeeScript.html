@@ -114,108 +114,92 @@ $(function(){
 
 <div id="content" class="wrapper doc">
     <article>
-        <h1><font><font>응용 프로그램을 프로덕션 모드에서 시작</font></font></h1> 
+        <h1><font><font>CoffeeScript를 사용</font></font></h1> 
 <!--
-There are several ways to deploy a Play application in production mode. Let's start by using the simplest way, using a local Play installation.
+[[CoffeeScript | http://jashkenas.github.com/coffee-script/]] is a small and elegant language that compiles into JavaScript. It provides a nicer syntax for writing JavaScript code.
 --> 
-<p><font><font>Play 어플리케이션을 실전 모드로 부팅하는 방법은 여러 가지가 있습니다. </font><font>우선 로컬 환경에 Play를 설치하는 가장 간단한 방법을 시도해 보자.</font></font></p> 
+<p><a href="http://jashkenas.github.com/coffee-script/"><font><font>CoffeeScript</font></font></a><font><font> 는 작고 우아한 언어로, JavaScript에 컴파일됩니다. </font><font>CoffeeScript를 사용하면 JavaScript 코드를 더 나은 구문으로 쓸 수 있습니다.</font></font></p> 
 <!--
-## Using the start command
+Compiled assets in Play 2.0 must be defined in the `app/assets` directory. They are handled by the build process, and CoffeeScript sources are compiled into standard JavaScript files. The generated JavaScript files are distributed as standard resources into the same `public/` folder as other unmanaged assets, meaning that there is no difference in the way you use them once compiled.
 --> 
-<h2><font><font>start 명령을 사용</font></font></h2> 
+<p><font><font>Play 2.0 CoffeeScript 등 다른 언어로 컴파일 된 같은 자산은 모든 </font></font><code><font><font>app / assets</font></font></code><font><font> 에 넣게되어 있습니다. </font><font>여기에 담긴 파일은 빌드에서 자동으로 컴파일됩니다. </font><font>CoffeeScript의 경우,이 때 보통 JavaScript에 컴파일됩니다. </font><font>생성 된 JavaScript 파일은 </font></font><code><font><font>public /</font></font></code><font><font> 디렉토리에 배치 된 것처럼 처리되므로 일단 컴파일되어 버리면 보통 JavaScript 파일과 차이는 없습니다.</font></font></p> 
 <!--
-The easiest way to start an application in production mode is to use the `start` command from the Play console. This requires a Play 2.0 installation on the server.
---> 
-<p><font><font>어플리케이션을 실전 모드로 부팅하는 가장 쉬운 방법은 Play 콘솔에서 </font></font><code><font><font>start</font></font></code><font><font> 명령을 실행하는 것입니다. </font><font>그래서 서버에 미리 Play 2.0을 설치해야합니다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pun"><font><font>[ </font></font></span><span class="typ"><font><font>My </font></font></span><span class="pln"><font><font>first Application </font></font></span><span class="pun"><font><font>] </font></font></span><span class="pln"><font><font>$ start</font></font></span></code></pre> 
-<!--
-> Note that the `run` command is only for development mode and should never be used to run an application in production. For each request a complete check is handled by sbt.
+> Note that managed resources are not copied directly into your application’s `public` folder, but maintained in a separate folder in `target/scala-2.9.1/resources_managed`.
 --> 
 <blockquote> 
- <p><code><font><font>run</font></font></code><font><font> 명령은 개발 모드 위해서만 된 것이므로, 운영 환경에서는 절대로 사용하지 마십시오. </font><font>개발 모드 요청마다 sbt가 모든 소스 파일의 업데이트 확인을 가버립니다.</font></font></p> 
+ <p><font><font>참고 : 생성 된 JavaScript 파일 등의 Play가 관리하는 자원 자체는 </font></font><code><font><font>public /</font></font></code><font><font> 디렉토리에 직접 복사되는 것이 아니라, </font></font><code><font><font>target/scala-2.9.1/resources_managed</font></font></code><font><font> 라는 다른 디렉토리에 저장됩니다.</font></font></p> 
 </blockquote> 
-<p><a href="../images/start.png"><img src="../images/start.png"></a></p> 
 <!--
-When you run the `start` command, Play forks a new JVM and runs the default Netty HTTP server. The standard output stream is redirected to the Play console, so you can monitor its status.
+For example a CoffeeScript source file `app/assets/javascripts/main.coffee` will be available as a standard JavaScript resource, at `public/javascripts/main.js`.
 --> 
-<p><code><font><font>start</font></font></code><font><font> 명령을 실행하면 Play는 JVM을 새로운 포크하여 표준 Netty HTTP 서버를 시작합니다. </font><font>그 때, 표준 출력 Play 콘솔로 리디렉션되므로 거기에서 응용 프로그램의 상태를 모니터링 할 수 있습니다.</font></font></p> 
+<p><font><font>예를 들어, </font></font><code><font><font>app / assets / javascripts / main.coffee</font></font></code><font><font> 는 </font></font><code><font><font>public / javascripts / main.js</font></font></code><font><font> 에서 통상의 JavaScript 리소스로 사용할 수 있습니다.</font></font></p> 
 <!--
-> The server’s process id is displayed at bootstrap and written to the `RUNNING_PID` file. To kill a running Play server, it is enough to send a `SIGTERM` to the process to properly shutdown the application.
+CoffeeScript sources are compiled automatically during a `compile` command, or when you refresh any page in your browser while you are running in development mode. Any compilation errors will be displayed in your browser:
+--> 
+<p><font><font>CoffeeScript 소스 파일은 </font></font><code><font><font>compile</font></font></code><font><font> 명령을 실행할 때와 개발 모드에서 응용 프로그램을 시작하는 동안 브라우저에서 페이지를 다시로드 될 때 자동으로 컴파일됩니다. </font><font>후자의 타이밍에 컴파일 된 경우 컴파일 오류는 브라우저에 표시됩니다.</font></font></p> 
+<p><a href="../images/coffeeError.png"><img src="../images/coffeeError.png"></a></p> 
+<!--
+## Layout
+--> 
+<h2><font><font>디렉토리 구조</font></font></h2> 
+<!--
+Here is an example layout for using CoffeeScript in your projects:
+--> 
+<p><font><font>CoffeeScript을 사용하는 프로젝트의 기본 데이레쿠토리 구조는 다음과 같습니다.</font></font></p> 
+<pre class="prettyprint scala"><code><span class="pln"><font><font>app
+  </font></font></span><span class="pun"><font><font>└ </font></font></span><span class="pln"><font><font>Assets
+     </font></font></span><span class="pun"><font><font>└ </font></font></span><span class="pln"><font><font>자바 스크립트 나
+        </font></font></span><span class="pun"><font><font>└ </font></font></span><span class="pln"><font><font>Main </font></font></span><span class="pun"><font><font>. </font></font></span><span class="pln"><font><font>coffee   </font></font></span></code></pre> 
+<!--
+Two JavaScript files will be compiled: `public/javascripts/main.js` and `public/javascripts/main.min.js`. The first one is a readable file useful in development, and the second one a minified file that you can use in production. You can use either one in your template:
+--> 
+<p><font><font>두 JavaScript 파일 : </font></font><code><font><font>public / javascripts / main.js</font></font></code><font><font> 와 </font></font><code><font><font>public / javascripts / main.min.js</font></font></code><font><font> 가 컴파일됩니다. </font><font>하나 번째 파일은 개발시 유용한 읽을 수있는 코드로, 둘째는 프로덕션 환경에서 사용할 수있는 압축 파일입니다. </font><font>모두 템플릿에서 사용할 수 있습니다 :</font></font></p> 
+<pre class="prettyprint scala"><code><span class="tag"><font><font>&lt;script </font></font></span><span class="pln"> </span><span class="atn"><font><font>src </font></font></span><span class="pun"><font><font>= </font></font></span><span class="atv"><font><font>"@ routes.Assets.at (" </font></font></span><span class="atn"><font><font>javascripts </font></font></span><span class="pun"><font><font>/ </font></font></span><span class="atn"><font><font>main </font></font></span><span class="pln"><font><font>. </font></font></span><span class="atn"><font><font>js </font></font></span><span class="atv"><font><font>")" </font></font></span><span class="tag"><font><font>&gt;</font></font></span></code></pre> 
+<pre class="prettyprint scala"><code><span class="tag"><font><font>&lt;script </font></font></span><span class="pln"> </span><span class="atn"><font><font>src </font></font></span><span class="pun"><font><font>= </font></font></span><span class="atv"><font><font>"@ routes.Assets.at (" </font></font></span><span class="atn"><font><font>javascripts </font></font></span><span class="pun"><font><font>/ </font></font></span><span class="atn"><font><font>main </font></font></span><span class="pln"><font><font>. </font></font></span><span class="atn"><font><font>min </font></font></span><span class="pln"><font><font>. </font></font></span><span class="atn"><font><font>js </font></font></span><span class="atv"><font><font>")" </font></font></span><span class="tag"><font><font>&gt;</font></font></span></code></pre> 
+<!--
+## Options
+--> 
+<h2><font><font>옵션</font></font></h2> 
+<!--
+CoffeeScript compilation can be configured in your project’s `Build.scala` file (in the settings part of the `PlayProject`). The only option currently supported is *bare* mode.
+--> 
+<p><font><font>CoffeeScript 컴파일은 ( </font></font><code><font><font>PlayProject</font></font></code><font><font> 설정 부분이다) </font></font><code><font><font>Build.scala</font></font></code><font><font> 파일에서 제어 할 수 있습니다. </font><font>현재 지원되는 유일한 옵션은 </font></font><em><font><font>bare</font></font></em><font><font> 모드입니다.</font></font></p> 
+<pre class="prettyprint scala"><code><span class="pln"><font><font>coffeescriptOptions </font></font></span><span class="pun"><font><font>: = </font></font></span><span class="pln"> </span><span class="typ"><font><font>Seq </font></font></span><span class="pun"><font><font>( </font></font></span><span class="str"><font><font>"bare" </font></font></span><span class="pun"><font><font>)</font></font></span></code></pre> 
+<!--
+> Note there is a new experimental option which lets you use the native coffee script compiler. The benefit is that it's way faster, the disadvantage is that it's an external dependency. If you want to try this, add this to your settings:
 --> 
 <blockquote> 
- <p><font><font>서버 시작시 서버의 프로세스 ID가 나타날 때, </font></font><code><font><font>RUNNING_PID</font></font></code><font><font> 라는 파일에 기록됩니다. </font><font>실행중인 Play 서버를 중지시키기 위해, 해당 프로세스에 </font></font><code><font><font>SIGTERM</font></font></code><font><font> 신호를 전송하여 응용 프로그램을 종료하면 좋을 것입니다.</font></font></p> 
+ <p><font><font>기본 CoffeeScript 컴파일을 사용 실험적인 옵션이 있음을 기억하십시오. </font><font>이 방법의 장점은 속도이며, 단점은 외부에 의존합니다. </font><font>이 방법을 시도하려면 설정에 다음을 추가하십시오 :</font></font></p> 
 </blockquote> 
+<pre class="prettyprint scala"><code><span class="pln"><font><font>coffeescriptOptions </font></font></span><span class="pun"><font><font>: = </font></font></span><span class="pln"> </span><span class="typ"><font><font>Seq </font></font></span><span class="pun"><font><font>( </font></font></span><span class="str"><font><font>"native" </font></font></span><span class="pun"><font><font>, </font></font></span><span class="pln"> </span><span class="str"><font><font>"/ usr / local / bin / coffe-p" </font></font></span><span class="pun"><font><font>)</font></font></span></code></pre> 
 <!--
-If you type `Ctrl+D`, the Play console will quit, but the created server process will continue running in background. The forked JVM’s standard output stream is then closed, and logging can be read from the `logs/application.log` file.
+By default, the JavaScript code is generated inside a top-level function safety wrapper, preventing it from polluting the global scope. The `bare` option removes this function wrapper.
 --> 
-<p><code><font><font>Ctrl + D</font></font></code><font><font> 를 입력하면 Play 콘솔은 종료되지만, 생성 된 서버 프로세스는 백그라운드에서 계속 실행됩니다. </font><font>그 때, 포크 한 JVM의 표준 출력은 닫혀 버립니다 만, 로그는 </font></font><code><font><font>logs / application.log</font></font></code><font><font> 라는 파일에 출력 계속됩니다.</font></font></p> 
+<p><font><font>글로벌 범위의 오염을 방지하기 위해 JavaScript 코드는 기본적으로 최상위의 안전한 함수 나팔에 생성됩니다. </font></font><code><font><font>bare</font></font></code><font><font> 옵션이 함수 래퍼를 제거합니다.</font></font></p> 
 <!--
-If you type `Ctrl+C`, you will kill both JVMs: the Play console and the forked Play server. 
---> 
-<p><code><font><font>Ctrl + C</font></font></code><font><font> 를 입력하면 Play 콘솔과 포크 한 Play 서버 모두 JVM을 종료합니다.</font></font></p> 
-<!--
-Alternatively you can directly use `play start` at your OS command prompt, which does the same thing:
---> 
-<p><font><font>위의 방법 외에, OS의 명령 프롬프트에서 </font></font><code><font><font>play start</font></font></code><font><font> 를 직접 실행해도 같은 수 있습니다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pln"><font><font>$ play start</font></font></span></code></pre> 
-<!--
-> Note: the HTTP port can be set by passing -Dhttp.port system variable
+> **Next:** [[Using LESS CSS | AssetsLess]]
 --> 
 <blockquote> 
- <p><font><font>Note :-Dhttp.port 시스템 변수를 전달하여 HTTP 포트 번호를 변경할 수 있습니다.</font></font></p> 
-</blockquote> 
-<!--
-## Using the stage task
---> 
-<h2><font><font>stage 작업을 사용</font></font></h2> 
-<!--
-The problem with the `start` command is that it starts the application interactively, which means that human interaction is needed, and `Ctrl+D` is required to detach the process. This solution is not really convenient for automated deployment.
---> 
-<p><code><font><font>start</font></font></code><font><font> 명령의 문제점은 응용 프로그램을 대화식으로 시작하는 수작업이 필요하다는 것과, 프로세스를 분리하려면 </font></font><code><font><font>Ctrl + D</font></font></code><font><font> 가 필요하다는 것입니다. </font><font>즉,이 방법은 배포 자동화에 적합하지 않습니다.</font></font></p> 
-<!--
-You can use the `stage` task to prepare your application to be run in place. The typical command for preparing a project to be run in place is:
---> 
-<p><font><font>이런 때 </font></font><code><font><font>stage</font></font></code><font><font> 작업을 사용하면 응용 프로그램이 나중에 즉시 시작할 수 있도록 준비를 할 수 있습니다. </font><font>프로젝트를 나중에 즉시 실행할 수 있도록하는 전형적인 명령은 다음과 같다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pln"><font><font>$ play clean compile stage</font></font></span></code></pre> 
-<p><a href="./Production_files/stage.png"><img src="./Production_files/stage.png"></a></p> 
-<!--
-This cleans and compiles your application, retrieves the required dependencies and copies them to the `target/staged` directory. It also creates a `target/start` script that runs the Play server.
---> 
-<p><font><font>이 명령은 응용 프로그램을 컴파일 할 때 생성 된 임시 파일이 제거되고 다시 컴파일이 실행되고 필요한 종속 모듈을 다운로드, 이들 모두가 </font></font><code><font><font>target / staged</font></font></code><font><font> 디렉토리에 복사됩니다. </font><font>또한 Play 서버를 시작하는 </font></font><code><font><font>target / start</font></font></code><font><font> 라는 스크립트도 생성됩니다.</font></font></p> 
-<!--
-You can start your application using:
---> 
-<p><font><font>응용 프로그램은 다음과 같이 시작할 수 있습니다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pln"><font><font>$ target </font></font></span><span class="pun"><font><font>/ </font></font></span><span class="pln"><font><font>start</font></font></span></code></pre> 
-<!--
-The generated `start` script is very simple - in fact, you could even execute the `java` command directly.
---> 
-<p><font><font>생성 된 </font></font><code><font><font>start</font></font></code><font><font> 스크립트는 아주 간단합니다. </font><font>실제로,이 스크립트를 사용하지 않고 </font></font><code><font><font>java</font></font></code><font><font> 명령은 직접 응용 프로그램을 시작해도 좋을 정도입니다.</font></font></p> 
-<!--
-If you don’t have Play installed on the server, you can use sbt to do the same thing:
---> 
-<p><font><font>만약 Play가 서버에 설치되어 있지 않은 것이다 얻으면, 같은 일을 위해 sbt를 사용해도 좋습니다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pln"><font><font>$ sbt clean compile stage</font></font></span></code></pre>
+ <p><strong><font><font>다음 : </font></font></strong> <a href="./AssetsLess.html"><font><font>LESS CSS를 사용</font></font></a></p> 
+</blockquote>
     </article>
     <aside>
     <h3><font><font>공식 문서</font></font></h3>
         <p>
-            <a href="http://www.playframework.org/documentation/2.0.3/Production" target="_blank"><font><font>Documentation : Production - Playframework</font></font></a>
+            <a href="http://www.playframework.org/documentation/2.0.3/AssetsCoffeeScript" target="_blank"><font><font>Documentation : AssetsCoffeeScript - Playframework</font></font></a>
         </p>
-                <h3><font><font>응용 프로그램 배포</font></font></h3> 
+                <h3><font><font>공개 에셋을 사용</font></font></h3> 
 <!--
-- [[Deploying your application | Production]]
-- [[Creating a standalone version of your application | ProductionDist]]
-- [[Additional configuration | ProductionConfiguration]]
-- [[Deploying to Heroku | ProductionHeroku]]
-- [[Set-up a front-end HTTP server | HTTPServer]]
+- [[Working with public assets | Assets]]
+- [[Using CoffeeScript | AssetsCoffeeScript]]
+- [[Using LESS CSS | AssetsLess]]
+- [[Using Google Closure Compiler | AssetsGoogleClosureCompiler]]
 --> 
 <ul> 
- <li><a href="./production.html"><font><font>응용 프로그램 배포</font></font></a></li> 
- <li><a href="./ProductionDist"><font><font>독립형 애플리케이션을 만들</font></font></a></li> 
- <li><a href="./ProductionConfiguration.html"><font><font>추가 설정</font></font></a></li> 
- <li><a href="./ProductionHeroku.html"><font><font>Heroku에 배포</font></font></a></li> 
- <li><a href="./HTTPServer.html"><font><font>프런트 엔드 HTTP 서버 설정</font></font></a></li> 
+ <li><a href="./assets.html"><font><font>공개 에셋을 사용</font></font></a></li> 
+ <li><a href="./AssetsCoffeeScript.html"><font><font>CoffeeScript를 사용</font></font></a></li> 
+ <li><a href="./AssetsLess.html"><font><font>LESS CSS를 사용</font></font></a></li> 
+ <li><a href="./AssetsGoogleClosureCompiler.html"><font><font>Google Closure Compiler를 사용</font></font></a></li> 
 </ul> 
 <!--
 ### Getting started

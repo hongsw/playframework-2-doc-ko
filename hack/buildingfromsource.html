@@ -114,120 +114,93 @@ $(function(){
 
 <div id="content" class="wrapper doc">
     <article>
-        <h1><font><font>응용 프로그램을 프로덕션 모드에서 시작</font></font></h1> 
+        <h1><font><font>Play 2.0 소스 코드에서 빌드</font></font></h1> 
 <!--
-There are several ways to deploy a Play application in production mode. Let's start by using the simplest way, using a local Play installation.
+To benefit from the latest improvements and bug fixes after the initial beta release, you may want to compile Play 2.0 from sources. You’ll need a [[Git client | http://git-scm.com/]] to fetch the sources.
+
+From the shell, first checkout the Play 2.0 sources:
 --> 
-<p><font><font>Play 어플리케이션을 실전 모드로 부팅하는 방법은 여러 가지가 있습니다. </font><font>우선 로컬 환경에 Play를 설치하는 가장 간단한 방법을 시도해 보자.</font></font></p> 
+<p><font><font>초기 베타 릴리스의 최신 개선 및 버그 수정의 혜택을 받고 싶은 경우, Play 2.0 소스 코드에서 컴파일합시다. </font><font>소스 코드는 </font></font><a href="http://git-scm.com/"><font><font>Git client</font></font></a><font><font> 에서 가져옵니다.</font></font></p> 
+<pre class="prettyprint scala"><code><span class="pln"><font><font>$ git clone git </font></font></span><span class="pun"><font><font>: </font></font></span><span class="com"><font><font>/ / github.com/playframework/Play20.git</font></font></span></code></pre> 
 <!--
-## Using the start command
+Then go to the `Play20/framework` directory and launch the `build` script to enter the sbt build console:
 --> 
-<h2><font><font>start 명령을 사용</font></font></h2> 
+<p><font><font>소스 코드를 얻으면 </font></font><code><font><font>Play20/framework</font></font></code><font><font> 디렉토리로 이동하여 </font></font><code><font><font>build</font></font></code><font><font> 스크립트를 시작하고 sbt의 빌드 콘솔로 이동합니다.</font></font></p> 
+<pre class="prettyprint scala"><code><span class="pln"><font><font>$ CD </font></font></span><span class="typ"><font><font>Play20 </font></font></span><span class="pun"><font><font>/ </font></font></span><span class="pln"><font><font>framework</font></font><font></font><font><font>
+$ </font></font></span><span class="pun"><font><font>. / </font></font></span><span class="pln"><font><font>build
+ </font></font></span><span class="pun"><font><font>&gt; </font></font></span><span class="pln"><font><font>build </font></font></span><span class="pun"><font><font>- </font></font></span><span class="pln"><font><font>repository</font></font></span></code></pre> 
 <!--
-The easiest way to start an application in production mode is to use the `start` command from the Play console. This requires a Play 2.0 installation on the server.
+Once in the sbt console, run `build-repository` to compile and build everything. This will also create the local Ivy repository containing all of the required dependencies.
 --> 
-<p><font><font>어플리케이션을 실전 모드로 부팅하는 가장 쉬운 방법은 Play 콘솔에서 </font></font><code><font><font>start</font></font></code><font><font> 명령을 실행하는 것입니다. </font><font>그래서 서버에 미리 Play 2.0을 설치해야합니다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pun"><font><font>[ </font></font></span><span class="typ"><font><font>My </font></font></span><span class="pln"><font><font>first Application </font></font></span><span class="pun"><font><font>] </font></font></span><span class="pln"><font><font>$ start</font></font></span></code></pre> 
+<p><font><font>sbt 콘솔에있을 때, </font></font><code><font><font>build-repository</font></font></code><font><font> 작업을 수행하여 전체 프레임 워크를 컴파일하자. </font><font>이 작업은 Play가 의존하는 모든 종속 모듈을 포함 로컬 Ivy 저장소를 만듭니다.</font></font></p> 
 <!--
-> Note that the `run` command is only for development mode and should never be used to run an application in production. For each request a complete check is handled by sbt.
---> 
-<blockquote> 
- <p><code><font><font>run</font></font></code><font><font> 명령은 개발 모드 위해서만 된 것이므로, 운영 환경에서는 절대로 사용하지 마십시오. </font><font>개발 모드 요청마다 sbt가 모든 소스 파일의 업데이트 확인을 가버립니다.</font></font></p> 
-</blockquote> 
-<p><a href="../images/start.png"><img src="../images/start.png"></a></p> 
-<!--
-When you run the `start` command, Play forks a new JVM and runs the default Netty HTTP server. The standard output stream is redirected to the Play console, so you can monitor its status.
---> 
-<p><code><font><font>start</font></font></code><font><font> 명령을 실행하면 Play는 JVM을 새로운 포크하여 표준 Netty HTTP 서버를 시작합니다. </font><font>그 때, 표준 출력 Play 콘솔로 리디렉션되므로 거기에서 응용 프로그램의 상태를 모니터링 할 수 있습니다.</font></font></p> 
-<!--
-> The server’s process id is displayed at bootstrap and written to the `RUNNING_PID` file. To kill a running Play server, it is enough to send a `SIGTERM` to the process to properly shutdown the application.
+> Note that you don’t need to install sbt yourself: Play 2.0 embeds its own version (currently sbt 0.11.2).
+
+If you want to make changes to the code you can use `compile` and `publish-local` to rebuild the framework.
 --> 
 <blockquote> 
- <p><font><font>서버 시작시 서버의 프로세스 ID가 나타날 때, </font></font><code><font><font>RUNNING_PID</font></font></code><font><font> 라는 파일에 기록됩니다. </font><font>실행중인 Play 서버를 중지시키기 위해, 해당 프로세스에 </font></font><code><font><font>SIGTERM</font></font></code><font><font> 신호를 전송하여 응용 프로그램을 종료하면 좋을 것입니다.</font></font></p> 
+ <p><font><font>sbt를 별도로 설치할 필요가 없습니다. </font><font>Play 2.0에 필요한 버전의 sbt (현재는 sbt 0.11.2)이 이미 포함되어 있기 때문입니다.</font></font></p> 
 </blockquote> 
+<p><font><font>만약 Play 자체를 변경 한 경우는 </font></font><code><font><font>compile</font></font></code><font><font> 과 </font></font><code><font><font>publish-local</font></font></code><font><font> 을 사용하여 프레임 워크를 다시 빌드하는 것이 좋습니다.</font></font></p> 
 <!--
-If you type `Ctrl+D`, the Play console will quit, but the created server process will continue running in background. The forked JVM’s standard output stream is then closed, and logging can be read from the `logs/application.log` file.
+## Running tests
+
+You can run basic tests from the sbt console using the `test` task:
 --> 
-<p><code><font><font>Ctrl + D</font></font></code><font><font> 를 입력하면 Play 콘솔은 종료되지만, 생성 된 서버 프로세스는 백그라운드에서 계속 실행됩니다. </font><font>그 때, 포크 한 JVM의 표준 출력은 닫혀 버립니다 만, 로그는 </font></font><code><font><font>logs / application.log</font></font></code><font><font> 라는 파일에 출력 계속됩니다.</font></font></p> 
+<h2><font><font>테스트를 실행하는</font></font></h2> 
+<p><font><font>sbt 콘솔 </font></font><code><font><font>test</font></font></code><font><font> 작업을 시작하면 기본적인 테스트를 수행 할 수 있습니다.</font></font></p> 
+<pre class="prettyprint scala"><code><span class="pun"><font><font>&gt; </font></font></span><span class="pln"><font><font>test</font></font></span></code></pre> 
 <!--
-If you type `Ctrl+C`, you will kill both JVMs: the Play console and the forked Play server. 
+We are also using several Play applications to test the framework. To run this complete test suite, use the `runtests` script:
 --> 
-<p><code><font><font>Ctrl + C</font></font></code><font><font> 를 입력하면 Play 콘솔과 포크 한 Play 서버 모두 JVM을 종료합니다.</font></font></p> 
+<p><font><font>우리는 샘플 애플리케이션을 통해 프레임 워크의 테스트도 실시하고 있습니다. </font></font><code><font><font>runtests</font></font></code><font><font> 스크립트를 실행하면 샘플에 대한 테스트를 포함한 전체 테스트 스위트를 실행 할 수 있습니다.</font></font></p> 
+<pre class="prettyprint scala"><code><span class="pln"><font><font>$ </font></font></span><span class="pun"><font><font>. / </font></font></span><span class="pln"><font><font>runtests</font></font></span></code></pre> 
 <!--
-Alternatively you can directly use `play start` at your OS command prompt, which does the same thing:
+## Creating projects
+
+Creating projects using the Play version you have built from source works much the same as a regular Play application.
 --> 
-<p><font><font>위의 방법 외에, OS의 명령 프롬프트에서 </font></font><code><font><font>play start</font></font></code><font><font> 를 직접 실행해도 같은 수 있습니다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pln"><font><font>$ play start</font></font></span></code></pre> 
+<h2><font><font>프로젝트 만들기</font></font></h2> 
+<p><font><font>소스 코드에서 직접 구축 한 버전의 Play를 사용하여 프로젝트를 만드는 방법은 일반 Play 응용 프로그램을 만드는 방법과 거의 동일합니다.</font></font></p> 
+<p><font><font>export PATH = $ PATH : 
+ </font></font><projdir><font><font>
+   / Play20 
+ </font></font></projdir></p> 
 <!--
-> Note: the HTTP port can be set by passing -Dhttp.port system variable
+If you have an existing Play 2.0 application that you are upgrading from Play 2.0 Beta to edge, please add 
 --> 
-<blockquote> 
- <p><font><font>Note :-Dhttp.port 시스템 변수를 전달하여 HTTP 포트 번호를 변경할 수 있습니다.</font></font></p> 
-</blockquote> 
+<p><font><font>이미 Play 2.0 Beta에서 개발 된 Play 2.0 응용 프로그램을 직접 빌드 한 버전으로 업그레이드 할 때,</font></font></p> 
+<pre class="prettyprint scala"><code><span class="pln"><font><font>resolvers </font></font></span><span class="pun"><font><font>+ + = </font></font></span><span class="pln"> </span><span class="typ"><font><font>Seq </font></font></span><span class="pun"><font><font>( </font></font></span><span class="pln">
+  </span><span class="pun"><font><font>... </font></font></span><span class="pln">
+  </span><span class="typ"><font><font>Resolver </font></font></span><span class="pun"><font><font>. </font></font></span><span class="pln"><font><font>file </font></font></span><span class="pun"><font><font>( </font></font></span><span class="str"><font><font>"Local Repository" </font></font></span><span class="pun"><font><font>, </font></font></span><span class="pln"><font><font>file </font></font></span><span class="pun"><font><font>( </font></font></span><span class="str"><font><font>"&lt;projdir&gt; / Play20/repository/local" </font></font></span><span class="pun"><font><font>)) ( </font></font></span><span class="typ"><font><font>Resolver </font></font></span><span class="pun"><font><font>. </font></font></span><span class="pln"><font><font>ivyStylePatterns </font></font></span><span class="pun"><font><font>), </font></font></span><span class="pln">
+  </span><span class="pun"><font><font>... </font></font></span><span class="pln">
+</span><span class="pun"><font><font>)</font></font></span><span class="pln"><font></font>
+<font></font><font><font>
+addSbtPlugin </font></font></span><span class="pun"><font><font>( </font></font></span><span class="str"><font><font>"play" </font></font></span><span class="pln"> </span><span class="pun"><font><font>% </font></font></span><span class="pln"> </span><span class="str"><font><font>"sbt-plugin" </font></font></span><span class="pln"> </span><span class="pun"><font><font>% </font></font></span><span class="pln"> </span><span class="str"><font><font>"2.1-SNAPSHOT" </font></font></span><span class="pun"><font><font>)</font></font></span></code></pre> 
 <!--
-## Using the stage task
+to project/plugins.sbt.
 --> 
-<h2><font><font>stage 작업을 사용</font></font></h2> 
+<p><font><font>같은 설정을 project / plugins.sbt에 추가합시다.</font></font></p> 
 <!--
-The problem with the `start` command is that it starts the application interactively, which means that human interaction is needed, and `Ctrl+D` is required to detach the process. This solution is not really convenient for automated deployment.
+## Using Code in eclipse.
+You can find at [Stackoverflow](http://stackoverflow.com/questions/10053201/how-to-setup-eclipse-ide-work-on-the-playframework-2-0/10055419#10055419) some information how to setup eclipse to work on the code.
 --> 
-<p><code><font><font>start</font></font></code><font><font> 명령의 문제점은 응용 프로그램을 대화식으로 시작하는 수작업이 필요하다는 것과, 프로세스를 분리하려면 </font></font><code><font><font>Ctrl + D</font></font></code><font><font> 가 필요하다는 것입니다. </font><font>즉,이 방법은 배포 자동화에 적합하지 않습니다.</font></font></p> 
-<!--
-You can use the `stage` task to prepare your application to be run in place. The typical command for preparing a project to be run in place is:
---> 
-<p><font><font>이런 때 </font></font><code><font><font>stage</font></font></code><font><font> 작업을 사용하면 응용 프로그램이 나중에 즉시 시작할 수 있도록 준비를 할 수 있습니다. </font><font>프로젝트를 나중에 즉시 실행할 수 있도록하는 전형적인 명령은 다음과 같다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pln"><font><font>$ play clean compile stage</font></font></span></code></pre> 
-<p><a href="./Production_files/stage.png"><img src="./Production_files/stage.png"></a></p> 
-<!--
-This cleans and compiles your application, retrieves the required dependencies and copies them to the `target/staged` directory. It also creates a `target/start` script that runs the Play server.
---> 
-<p><font><font>이 명령은 응용 프로그램을 컴파일 할 때 생성 된 임시 파일이 제거되고 다시 컴파일이 실행되고 필요한 종속 모듈을 다운로드, 이들 모두가 </font></font><code><font><font>target / staged</font></font></code><font><font> 디렉토리에 복사됩니다. </font><font>또한 Play 서버를 시작하는 </font></font><code><font><font>target / start</font></font></code><font><font> 라는 스크립트도 생성됩니다.</font></font></p> 
-<!--
-You can start your application using:
---> 
-<p><font><font>응용 프로그램은 다음과 같이 시작할 수 있습니다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pln"><font><font>$ target </font></font></span><span class="pun"><font><font>/ </font></font></span><span class="pln"><font><font>start</font></font></span></code></pre> 
-<!--
-The generated `start` script is very simple - in fact, you could even execute the `java` command directly.
---> 
-<p><font><font>생성 된 </font></font><code><font><font>start</font></font></code><font><font> 스크립트는 아주 간단합니다. </font><font>실제로,이 스크립트를 사용하지 않고 </font></font><code><font><font>java</font></font></code><font><font> 명령은 직접 응용 프로그램을 시작해도 좋을 정도입니다.</font></font></p> 
-<!--
-If you don’t have Play installed on the server, you can use sbt to do the same thing:
---> 
-<p><font><font>만약 Play가 서버에 설치되어 있지 않은 것이다 얻으면, 같은 일을 위해 sbt를 사용해도 좋습니다.</font></font></p> 
-<pre class="prettyprint scala"><code><span class="pln"><font><font>$ sbt clean compile stage</font></font></span></code></pre>
+<h2><font><font>코드를 eclipse에서 열</font></font></h2> 
+<p><font><font>Play 코드를 eclipse에서 여는 데 필요한 설정은 </font></font><a href="http://stackoverflow.com/questions/10053201/how-to-setup-eclipse-ide-work-on-the-playframework-2-0/10055419#10055419"><font><font>Stackoverflow</font></font></a><font><font> 를 참조하십시오.</font></font></p>
     </article>
     <aside>
     <h3><font><font>공식 문서</font></font></h3>
         <p>
-            <a href="http://www.playframework.org/documentation/2.0.3/Production" target="_blank"><font><font>Documentation : Production - Playframework</font></font></a>
+            <a href="http://www.playframework.org/documentation/2.0.3/BuildingFromSource" target="_blank"><font><font>Documentation : BuildingFromSource - Playframework</font></font></a>
         </p>
-                <h3><font><font>응용 프로그램 배포</font></font></h3> 
+                <h3><font><font>Play 2.0 Hack하는</font></font></h3> 
 <!--
-- [[Deploying your application | Production]]
-- [[Creating a standalone version of your application | ProductionDist]]
-- [[Additional configuration | ProductionConfiguration]]
-- [[Deploying to Heroku | ProductionHeroku]]
-- [[Set-up a front-end HTTP server | HTTPServer]]
---> 
-<ul> 
- <li><a href="./production.html"><font><font>응용 프로그램 배포</font></font></a></li> 
- <li><a href="./ProductionDist"><font><font>독립형 애플리케이션을 만들</font></font></a></li> 
- <li><a href="./ProductionConfiguration.html"><font><font>추가 설정</font></font></a></li> 
- <li><a href="./ProductionHeroku.html"><font><font>Heroku에 배포</font></font></a></li> 
- <li><a href="./HTTPServer.html"><font><font>프런트 엔드 HTTP 서버 설정</font></font></a></li> 
-</ul> 
-<!--
-### Getting started
--->
-<h3><font><font>소개</font></font></h3> 
-<!--
-- [[Installing Play 2.0 | Installing]]
-- [[Creating a new application | NewApplication]]
-- [[Anatomy of a Play 2.0 application | Anatomy]]
-- [[Using the Play 2.0 console | PlayConsole ]]
-- [[Setting-up your preferred IDE | IDE]]
-- [[Sample applications | Samples]]
+- [[Building Play 2.0 from source | BuildingFromSource]]
+- [[CI server at Cloudbees | CIServer]]
+- [[Repositories | Repositories]]
+- [[Issues tracker | Issues]]
+- [[Pull requests | PullRequests]]
+- [[Contributor guidelines | Guidelines]]
 --> 
  <ul> 
  <li><a href="../installing.html"><font><font>Play 2.0 설치</font></font></a></li> 
